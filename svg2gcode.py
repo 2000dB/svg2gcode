@@ -6,6 +6,20 @@ import shapes as shapes_pkg
 from shapes import point_generator
 from config import *
 
+
+# Utility function to strip a value's unit in the svg file since we're assuming that everything is in mm
+def stripUnit(val):
+    if(val.endswith("mm") or
+       val.endswith("px") or
+       val.endswith("cm")
+    ):
+        val = val[:-2]
+    elif(val.endswith("%")):
+        val = val[:-1]
+
+    return val
+
+
 def generate_gcode():
     svg_shapes = set(['rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path'])
     
@@ -23,8 +37,8 @@ def generate_gcode():
         print "Unable to get width and height for the svg"
         sys.exit(1)
 
-    width = float(width)
-    height = float(height)
+    width = float(stripUnit(width))
+    height = float(stripUnit(height))
 
     scale_x = bed_max_x / max(width, height)
     scale_y = bed_max_y / max(width, height)
